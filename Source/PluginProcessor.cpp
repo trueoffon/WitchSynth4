@@ -1574,7 +1574,9 @@ void WitchSynthAudioProcessor::setStateInformation(const void* data, int sizeInB
     if (xml && xml->hasTagName(apvts.state.getType()))
     {
         auto tree = juce::ValueTree::fromXml(*xml);
-        currentPresetIndex = juce::jlimit(0, static_cast<int>(getAllPresets().size()) - 1, tree.getProperty("presetIndex", 0));
+        const int presetCount = static_cast<int>(getAllPresets().size());
+        const int savedPresetIndex = static_cast<int>(tree.getProperty("presetIndex", 0));
+        currentPresetIndex = presetCount > 0 ? juce::jlimit(0, presetCount - 1, savedPresetIndex) : 0;
         apvts.replaceState(tree);
         resetFxFlag.store(true);
     }
